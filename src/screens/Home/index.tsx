@@ -1,5 +1,6 @@
 import React from 'react';
-import { StatusBar } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { Alert, StatusBar, Text, View } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
 
 import Logo from '../../assets/logo.svg';
@@ -13,8 +14,11 @@ import {
     HeaderContent,
     CarList
 } from './styles';
+import { RectButton } from 'react-native-gesture-handler';
 
 export function Home() {
+
+    const navigation = useNavigation();
 
     const carData = {
         brand: 'audio',
@@ -23,6 +27,11 @@ export function Home() {
             period: 'AO DIA',
             price: 120
         }
+    }
+
+    function handleCarDetails() {
+        const name = 'CarDetails' as never;
+        navigation.navigate(name)
     }
 
     return (
@@ -44,13 +53,19 @@ export function Home() {
                 </HeaderContent>
             </Header>
 
+
+
             <CarList
                 data={[1, 2, 3, 4, 5, 6]}
                 keyExtractor={item => String(item)}
-                renderItem={({ item }) => <Car data={carData} />}
+                renderItem={({ item }) => <Car
+                    data={carData}
+                    onPress={handleCarDetails}
+                />
+                }
             />
 
 
-        </Container>
+        </Container >
     );
 }
