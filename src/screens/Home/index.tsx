@@ -1,11 +1,15 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { Alert, StatusBar, Text, View } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
 
 import Logo from '../../assets/logo.svg';
+import api from '../../service/api';
 
 import { Car } from '../../components/Car';
+import { Load } from '../../components/Load';
+
+import { CarDTO } from '../../dtos/carDTO';
 
 import {
     Container,
@@ -14,20 +18,31 @@ import {
     HeaderContent,
     CarList
 } from './styles';
-import { RectButton } from 'react-native-gesture-handler';
 
 export function Home() {
 
+    const [cars, setCars] = useState<CarDTO[]>([]);
+    const [loading, setLoading] = useState(true)
+
     const navigation = useNavigation();
 
-    const carData = {
-        brand: 'audio',
-        name: 'RS 5 Coups',
-        rent: {
-            period: 'AO DIA',
-            price: 120
+    useEffect(() => {
+        async function fetchCars() {
+            try {
+                const response = await api.get('/cars');
+
+                setCars(response.data);
+            } catch (error: any) {
+                console.log(error);
+            } finally {
+                setLoading(false);
+            }
+
         }
-    }
+
+        fetchCars();
+    }, []);
+
 
     function handleCarDetails() {
         const name = 'CarDetails' as never;
@@ -54,17 +69,17 @@ export function Home() {
             </Header>
 
 
-
-            <CarList
-                data={[1, 2, 3, 4, 5, 6]}
-                keyExtractor={item => String(item)}
-                renderItem={({ item }) => <Car
-                    data={carData}
-                    onPress={handleCarDetails}
+            {loading ? <Load /> :
+                <CarList
+                    data={cars}
+                    keyExtractor={(item: CarDTO) => String(item.id)}
+                    renderItem={({ item }) => <Car
+                        data={item}
+                        onPress={handleCarDetails}
+                    />
+                    }
                 />
-                }
-            />
-
+            }
 
         </Container >
     );

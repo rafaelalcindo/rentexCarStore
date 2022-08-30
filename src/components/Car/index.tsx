@@ -16,22 +16,15 @@ import {
     CardImage,
 } from './styles';
 
+import { CarDTO } from '../../dtos/carDTO';
 
-interface CarData {
-    brand: string;
-    name: string;
-    rent: {
-        period: string;
-        price: number;
-    }
-    thumbnail?: string
-}
 
 interface Props extends RectButtonProps {
-    data: CarData;
+    data: CarDTO;
 }
 
 export function Car({ data, ...rest }: Props) {
+    console.log(data.thumbnail)
     return (
         <Container {...rest} >
             <Details>
@@ -52,7 +45,7 @@ export function Car({ data, ...rest }: Props) {
             </Details>
 
             <CardImage
-                source={CarroAudio}
+                source={{ uri: data.thumbnail }}
                 resizeMode="contain"
             />
         </Container>
