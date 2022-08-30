@@ -1,6 +1,7 @@
 import { RFValue } from 'react-native-responsive-fontsize';
 import styled from 'styled-components/native';
 import { FlatList } from 'react-native';
+import { CarDTO } from '../../dtos/carDTO';
 
 export const Container = styled.View`
   flex: 1;
@@ -30,11 +31,12 @@ export const HeaderContent = styled.View`
   justify-content: space-between;
 `;
 
-export const CarList = styled(FlatList).attrs({
-  contentContainerStyle: {
-    padding: 24
-  },
-  showVerticalScrollIndicator: false
-})`
+export const CarList = styled(FlatList as new () => FlatList<CarDTO>)
+  .attrs({
+    contentContainerStyle: {
+      padding: 24
+    },
+    showVerticalScrollIndicator: false
+  })`
 
 `;
