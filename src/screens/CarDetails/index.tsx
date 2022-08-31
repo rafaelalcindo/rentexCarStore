@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { BorderlessButtonProps } from 'react-native-gesture-handler';
 
@@ -8,12 +8,7 @@ import { ImageSlider } from '../../components/ImageSlider';
 import { Acessory } from '../../components/Acessory';
 import { Button } from '../../components/Button';
 
-import SpeedSvg from '../../assets/speed.svg';
-import AccelerationSvg from '../../assets/acceleration.svg';
-import ForceSvg from '../../assets/force.svg';
-import GasolineSvg from '../../assets/gasoline.svg';
-import ExchangeSvg from '../../assets/exchange.svg';
-import PeopleSvg from '../../assets/people.svg';
+import { getAccessoryIcon } from '../../utils/getAccessoryIcon';
 
 import {
     Container,
@@ -31,71 +26,64 @@ import {
     Acessories,
     Footer
 } from './styles';
+import { CarDTO } from '../../dtos/carDTO';
+
+interface Params {
+    car: CarDTO;
+}
 
 export function CarDetails() {
     const navigation = useNavigation();
+    const route = useRoute();
+
+    const { car } = route.params as Params;
 
     function handleConfirmRental() {
         const namePage = 'Scheduling' as never;
         navigation.navigate(namePage);
     }
 
+    function handleBack() {
+        navigation.goBack();
+    }
+
     return (
         <Container>
             <Header>
-                <BackButton onPress={() => { }} />
+                <BackButton onPress={handleBack} />
             </Header>
 
             <CarImage >
-                <ImageSlider imageUrl={['https://www.lamborghini.com/sites/it-en/files/DAM/lamborghini/facelift_2019/homepage/families-gallery/2022/04_12/family_chooser_tecnica_m.png']} />
+                {/* <ImageSlider imageUrl={['https://www.lamborghini.com/sites/it-en/files/DAM/lamborghini/facelift_2019/homepage/families-gallery/2022/04_12/family_chooser_tecnica_m.png']} /> */}
+                <ImageSlider imageUrl={car.photos} />
             </CarImage>
 
             <Content>
                 <Details>
                     <Description>
-                        <Brand>Lamborgini</Brand>
-                        <Name>Huracan</Name>
+                        <Brand>{car.brand}</Brand>
+                        <Name>{car.name}</Name>
                     </Description>
 
                     <Rent>
-                        <Period>Ao dia</Period>
-                        <Price>R$ 580,00</Price>
+                        <Period>{car.rent.period}</Period>
+                        <Price>R$ {car.rent.price}</Price>
                     </Rent>
                 </Details>
 
                 <Acessories>
-                    <Acessory name='380Km/h' icon={SpeedSvg} />
-                    <Acessory name='3.2s' icon={AccelerationSvg} />
-                    <Acessory name='800 HP' icon={ForceSvg} />
-                    <Acessory name='Gasoline' icon={GasolineSvg} />
-                    <Acessory name='Auto' icon={ExchangeSvg} />
-                    <Acessory name='2 pessoas' icon={PeopleSvg} />
+                    {
+                        car.accessories.map(accessory => (
+                            <Acessory
+                                key={accessory.type}
+                                name={accessory.name}
+                                icon={getAccessoryIcon(accessory.type)}
+                            />
+                        ))
+                    }
                 </Acessories>
 
-
-                <About>
-                    sdfasfasdfasdf asdf asdf asdf asdf asdf as
-                    fasd fasdfasdf asdf asdf asd gasdfasf as
-                    fa sdfasdf asdf asdf asdf as fasd
-                </About>
-
-                <About>
-                    sdfasfasdfasdf asdf asdf asdf asdf asdf as
-                    fasd fasdfasdf asdf asdf asd gasdfasf as
-                    fa sdfasdf asdf asdf asdf as fasd
-                </About>
-                <About>
-                    sdfasfasdfasdf asdf asdf asdf asdf asdf as
-                    fasd fasdfasdf asdf asdf asd gasdfasf as
-                    fa sdfasdf asdf asdf asdf as fasd
-                </About>
-                <About>
-                    sdfasfasdfasdf asdf asdf asdf asdf asdf as
-                    fasd fasdfasdf asdf asdf asd gasdfasf as
-                    fa sdfasdf asdf asdf asdf as fasd
-                </About>
-
-
+                <About>{car.about}</About>
 
             </Content>
 

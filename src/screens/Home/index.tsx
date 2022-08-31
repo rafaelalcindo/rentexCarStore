@@ -44,9 +44,9 @@ export function Home() {
     }, []);
 
 
-    function handleCarDetails() {
+    function handleCarDetails(car: CarDTO) {
         const name = 'CarDetails' as never;
-        navigation.navigate(name)
+        navigation.navigate(name, { car })
     }
 
     return (
@@ -75,7 +75,7 @@ export function Home() {
                     keyExtractor={(item: CarDTO) => String(item.id)}
                     renderItem={({ item }) => <Car
                         data={item}
-                        onPress={handleCarDetails}
+                        onPress={() => handleCarDetails(item)}
                     />
                     }
                 />
